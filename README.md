@@ -147,7 +147,7 @@ This runs through a small helper program in your AWS account, called the ops fun
 
 First, find the function. Follow steps 1 and 2 below, then type `sportspicker-` in the search box above the function list. Your function is the one that ends in `-ops`. Its name is `sportspicker-<club-slug>-ops`.
 
-For the curious, the club slug is built from your club name like this: it is made lowercase, each run of characters that is not a plain letter or digit (accented letters included) becomes a single `-`, dashes at the start and end are removed, and the result is cut to 30 characters. For example, `Riverside Picks Club` becomes `riverside-picks-club`. You will need the slug for the event text below, and the function name shows it between `sportspicker-` and `-ops`.
+For the curious, the club slug is built from your club name like this: it is made lowercase, each run of characters that is not a plain letter or digit (accented letters included) becomes a single `-`, dashes at the start and end are removed, and the result is cut to 30 characters, then any dash left at the end is removed again. For example, `Riverside Picks Club` becomes `riverside-picks-club`. You will need the slug for the event text below, and the function name shows it between `sportspicker-` and `-ops`.
 
 Then:
 
@@ -258,4 +258,4 @@ An update went wrong and the undo also failed. The stack is locked.
 
 ### A failed first install
 
-If your first install ends in **ROLLBACK_COMPLETE**, the site is not running and the main charges have stopped. A small AWS helper stack named `CDKToolkit` may stay behind at near-zero cost; you can delete it from the CloudFormation list if nothing else in the account uses it (see the CDKToolkit note in section 10). Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
+If your first install ends in **ROLLBACK_COMPLETE**, the site is not running and the main charges have stopped. A small AWS helper stack named `CDKToolkit` may stay behind at near-zero cost; leave it in place. It costs almost nothing, and the next install reuses it. Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
