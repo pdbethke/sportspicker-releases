@@ -55,12 +55,12 @@ Stay in that region for the rest of this guide. Every time you come back to the 
 Make sure you are signed in to the AWS console and the right region is showing. Then click this button:
 
 <!-- RELEASE MANAGER: replace <TEMPLATE_URL> below with the URL of the published deployer template from the first release. Do this before anyone follows this guide. -->
-[![Launch SportsPicker](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=<TEMPLATE_URL>&stackName=SportsPicker-club)
+[![Launch SportsPicker](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=<TEMPLATE_URL>&stackName=SportsPicker-deployer)
 
 The AWS CloudFormation page opens. CloudFormation is the AWS tool that builds everything for you from a ready-made recipe. The recipe is already loaded.
-<!-- screenshot: the CloudFormation quick-create page with the template loaded and the stack name SportsPicker-club -->
+<!-- screenshot: the CloudFormation quick-create page with the template loaded and the stack name SportsPicker-deployer -->
 
-Leave the stack name as `SportsPicker-club`.
+Leave the stack name as `SportsPicker-deployer`.
 
 ## 4. Fill in the fields
 
@@ -68,7 +68,7 @@ You will see a short form. Five fields matter.
 
 | Field | What to type |
 | --- | --- |
-| **ClubName** | Your club's name, for example `Riverside Picks Club`. Members see this on the site. |
+| **ClubName** | Your club's name, for example `Riverside Picks Club`, up to 64 characters. Members see this on the site. |
 | **AdminUsername** | The name you will use to log in as administrator. |
 | **AdminPassword** | A password for the administrator. It must be at least 12 characters. Store it in a password manager. |
 | **BudgetEmail** | The email address that receives the cost alerts. Use one you read. |
@@ -107,7 +107,7 @@ If the status turns red and says anything with FAILED or ROLLBACK, go to section
 
 ## 6. Find your site address
 
-1. Click your `SportsPicker-club` stack.
+1. Click your `SportsPicker-deployer` stack.
 2. Click the **Outputs** tab.
 3. Find the row named **SiteUrl**. The value is your site's address.
 
@@ -121,11 +121,11 @@ To log in as administrator, add `admin/` to the end of the address. For example,
 
 ## 7. Update to a new version
 
-When we publish a new version, the admin dashboard shows a notice: "Version X is available". It has an **Update** button.
+When we publish a new version, the admin dashboard shows a notice: "Update available", with the new version number in a small badge beside it (for example `v1.2.0`), a **Release notes** link and an **Update** button.
 
 1. Log in at your SiteUrl plus `admin/`.
 2. Click **Update**. The AWS CloudFormation page for your stack opens. If AWS asks you to sign in, do so.
-<!-- screenshot: the admin dashboard showing the "Version X is available" notice and Update button -->
+<!-- screenshot: the admin dashboard showing the "Update available" notice with its version badge and Update button -->
 3. Choose **Update stack**, then **Make a direct update**.
 4. Choose **Replace existing template**. The new template address is already filled in. Click **Next**.
 5. On the parameters page, keep every value as it is. Do not change anything.
@@ -135,7 +135,9 @@ When we publish a new version, the admin dashboard shows a notice: "Version X is
 
 Wait for the status to read **UPDATE_COMPLETE**. If an update fails, your old version keeps serving until it is fixed.
 
-Note on the password: the AdminPassword field only matters at install. If you type a new password on the update page, nothing happens. This version has no way to change the admin password after install. Choose it carefully and keep it in a password manager.
+Some versions can only be reached from a recent one. If the update fails with a message that it needs an earlier version first (for example "needs v1.2.0 or later"), nothing was changed: update to that version first, then to the new one.
+
+Note on the password: do not type a new AdminPassword on the update page. A new password typed there is stored in the install's secret but never used, and the next update overwrites it. Your admin password stays the one you chose at install. This version has no way to change it after install. Choose it carefully and keep it in a password manager.
 
 ## 8. Remove the demo league
 
@@ -190,7 +192,7 @@ A snapshot you keep costs a small amount each month. Delete it from the same Sna
 This stops the monthly charges.
 
 1. Open the CloudFormation console and check your region.
-2. Click the `SportsPicker-club` stack.
+2. Click the `SportsPicker-deployer` stack.
 3. Click **Delete**, then confirm.
 <!-- screenshot: the stack page with Delete button and confirmation dialog -->
 4. Wait for the stack to disappear from the list. This takes several minutes.
