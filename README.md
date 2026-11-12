@@ -11,7 +11,7 @@ The whole install takes about 30 minutes of your time. Most of that is waiting.
 SportsPicker runs in your own Amazon Web Services (AWS) account. AWS bills you directly.
 
 - Expect about $16.50 to $17.50 a month.
-- Most of that, about $14 to $15, is the database. Three stored secrets cost 3 x $0.40. Everything else together is under $1.
+- Most of that, about $14 to $15, is the database. Three stored secrets cost 3 x $0.40. Each of the remaining items is under $1.
 - The install sets a $20 monthly budget. AWS emails you when you reach 80% and 100% of it.
 - Deleting the install stops the charges. Section 10 shows how.
 
@@ -101,7 +101,7 @@ The next page shows your stack with the status **CREATE_IN_PROGRESS**. This is n
 
 You may see a second stack appear, named `CDKToolkit`. That is an AWS helper stack the install needs. Leave it alone.
 
-When the status changes to **CREATE_COMPLETE**, the install is done. Check your email too: AWS Budgets may ask you to confirm the alert address.
+When the status changes to **CREATE_COMPLETE**, the install is done.
 
 If the status turns red and says anything with FAILED or ROLLBACK, go to section 12.
 
@@ -135,7 +135,7 @@ When we publish a new version, the admin dashboard shows a notice: "Version X is
 
 Wait for the status to read **UPDATE_COMPLETE**. If an update fails, your old version keeps serving until it is fixed.
 
-Note on the password: the AdminPassword field only matters at install. If you type a new password on the update page, nothing happens. To change your admin password, do it inside the admin app.
+Note on the password: the AdminPassword field only matters at install. If you type a new password on the update page, nothing happens. This version has no way to change the admin password after install. Choose it carefully and keep it in a password manager.
 
 ## 8. Remove the demo league
 
@@ -145,14 +145,9 @@ This runs through a small helper program in your AWS account, called the ops fun
 
 > Note for the guide author: the exact console clicks below are written from understanding and are to be confirmed against the real console in Task 12.
 
-First, work out the function name. It is `sportspicker-<club-slug>-ops`. The **club slug** is your club name turned into a simple code:
+First, find the function. Follow steps 1 and 2 below, then type `sportspicker-` in the search box above the function list. Your function is the one that ends in `-ops`. Its name is `sportspicker-<club-slug>-ops`.
 
-1. Make everything lowercase.
-2. Replace anything that is not a letter or a number with `-`.
-3. Remove any `-` at the very start or end.
-4. Keep at most 30 characters.
-
-Example: `Riverside Picks Club` becomes `riverside-picks-club`, so the function is `sportspicker-riverside-picks-club-ops`.
+For the curious, the club slug is built from your club name like this: it is made lowercase, each run of characters that is not a plain letter or digit (accented letters included) becomes a single `-`, dashes at the start and end are removed, and the result is cut to 30 characters. For example, `Riverside Picks Club` becomes `riverside-picks-club`. You will need the slug for the event text below, and the function name shows it between `sportspicker-` and `-ops`.
 
 Then:
 
@@ -167,14 +162,14 @@ Then:
    ```json
    {"argv": ["purge-demo", "--club", "riverside-picks-club"]}
    ```
-7. Click **Test**. Open the **Details** under the result. This is a preview. It lists what would be removed and deletes nothing.
+7. Click **Test**. Open the **Details** under the result. This is a preview. It lists what would be removed and deletes nothing. A green "Succeeded" banner alone does not mean the command worked. Look for `"exit_code": 0` in the result and read the `stdout` text.
 <!-- screenshot: the Test tab with the preview event JSON and the result panel -->
 8. If the list looks right, change the event JSON to add `"--yes"`:
 
    ```json
    {"argv": ["purge-demo", "--club", "riverside-picks-club", "--yes"]}
    ```
-9. Click **Test** again. This time the demo data is deleted. It cannot be undone.
+9. Click **Test** again. This time the demo data is deleted. It cannot be undone. Check for `"exit_code": 0` and read `stdout` again.
 
 ## 9. Take a snapshot before you delete (optional)
 
@@ -208,10 +203,10 @@ About `CDKToolkit`, the AWS helper stack from section 5: it is removed only if y
 
 These are optional and are for when your club is ready.
 
-**A paid sports-data key (SportsRadar).** A key lets the site show real games instead of the invented league.
+**A paid sports-data key (SportsRadar).** The install wires the key up for scheduled imports of real game data. Those imports also need the sport to be configured, and this version of the install does not do that step, so a key alone does not change what your site shows yet.
 
 1. Buy a key from SportsRadar.
-2. In the console, open **Secrets Manager** and click **Store a new secret**. Choose **Other type of secret**, store the key, and pick any name you like, for example `my-sportsradar-key`.
+2. In the console, open **Secrets Manager** and click **Store a new secret**. Choose **Other type of secret**, then open the **Plaintext** tab and paste only the key, with nothing else. Do not use the key/value tab, which stores the key in a form the site cannot read. Pick any name you like, for example `my-sportsradar-key`.
 3. Open your stack in CloudFormation and choose **Update stack**, **Replace existing template** as in section 7.
 4. Set `SportsDataKeySecret` to the secret's name (`my-sportsradar-key` in the example). Keep every other value.
 5. Tick the IAM box and submit.
@@ -263,4 +258,4 @@ An update went wrong and the undo also failed. The stack is locked.
 
 ### A failed first install
 
-If your first install ends in **ROLLBACK_COMPLETE**, nothing is running and nothing is charged. Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
+If your first install ends in **ROLLBACK_COMPLETE**, the site is not running and the main charges have stopped. A small AWS helper stack named `CDKToolkit` may stay behind at near-zero cost; you can delete it from the CloudFormation list if nothing else in the account uses it (see the CDKToolkit note in section 10). Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
