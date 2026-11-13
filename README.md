@@ -77,6 +77,10 @@ About `SportsDataKeySecret`: this is where a paid sports-data key would go, and 
 
 <!-- screenshot: the filled-in parameters form with the five fields completed (password hidden) -->
 
+Below the parameters, the **Permissions** section has a box called **IAM role - optional**. Leave it empty and do not pick anything from its list. The install creates every role it needs by itself. A role chosen here would be used instead of your own login, and the install can fail partway through.
+
+<!-- screenshot: the Permissions section with the IAM role box left empty -->
+
 Scroll to the bottom. Under **Capabilities**, tick the box that says:
 
 > I acknowledge that AWS CloudFormation might create IAM resources.
@@ -128,7 +132,7 @@ When we publish a new version, the admin dashboard shows a notice: "Update avail
 3. Choose **Update stack**, then **Make a direct update**.
 4. Choose **Replace existing template**. The new template address is already filled in. Click **Next**.
 5. On the parameters page, keep every value as it is. Do not change anything.
-6. Tick the IAM acknowledgement box again. It resets each time.
+6. Leave **IAM role - optional** empty, as at install. Tick the IAM acknowledgement box again. It resets each time.
 7. Click **Next**, then **Next**, then **Submit**.
 <!-- screenshot: the Update stack parameters page with existing values kept -->
 
@@ -210,7 +214,7 @@ These are optional and are for when your club is ready.
 2. In the console, open **Secrets Manager** and click **Store a new secret**. Choose **Other type of secret**, then open the **Plaintext** tab and paste only the key, with nothing else. Do not use the key/value tab, which stores the key in a form the site cannot read. Pick any name you like, for example `my-sportsradar-key`.
 3. Open your stack in CloudFormation and choose **Update stack**, **Replace existing template** as in section 7.
 4. Set `SportsDataKeySecret` to the secret's name (`my-sportsradar-key` in the example). Keep every other value.
-5. Tick the IAM box and submit.
+5. Leave **IAM role - optional** empty, tick the IAM box and submit.
 
 A stored secret costs about $0.40 a month.
 
