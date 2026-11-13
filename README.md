@@ -54,7 +54,7 @@ Stay in that region for the rest of this guide. Every time you come back to the 
 
 Make sure you are signed in to the AWS console and the right region is showing. Then click this button:
 
-[![Launch SportsPicker](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=https://sportspicker-releases.s3.us-east-2.amazonaws.com/v0.1.0/deployer.template.json&stackName=SportsPicker-deployer)
+[![Launch SportsPicker](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/quickcreate?templateURL=https://sportspicker-releases.s3.us-east-2.amazonaws.com/v0.1.1/deployer.template.json&stackName=SportsPicker-deployer)
 
 The AWS CloudFormation page opens. CloudFormation is the AWS tool that builds everything for you from a ready-made recipe. The recipe is already loaded.
 <!-- screenshot: the CloudFormation quick-create page with the template loaded and the stack name SportsPicker-deployer -->
