@@ -136,7 +136,9 @@ When we publish a new version, the admin dashboard shows a notice: "Update avail
 7. Click **Next**, then **Next**, then **Submit**.
 <!-- screenshot: the Update stack parameters page with existing values kept -->
 
-Wait for the status to read **UPDATE_COMPLETE**. If an update fails, your old version keeps serving until it is fixed.
+Wait for the status to read **UPDATE_COMPLETE**. If an update fails, your old version keeps serving until it is fixed. The stack undoes the update by itself and ends in **UPDATE_ROLLBACK_COMPLETE**. When the cause is fixed, run the update again.
+
+Do not load an older version's template to go back. An older version is not built to run on a database that a newer one has changed. Versions that know this change nothing on your site when asked to go back, even though the update finishes and says **UPDATE_COMPLETE**. If that happens, update again with the newer version's template.
 
 Some versions can only be reached from a recent one. If the update fails with a message that it needs an earlier version first (for example "needs v1.2.0 or later"), nothing was changed: update to that version first, then to the new one.
 
@@ -198,7 +200,7 @@ This stops the monthly charges.
 2. Click the `SportsPicker-deployer` stack.
 3. Click **Delete**, then confirm.
 <!-- screenshot: the stack page with Delete button and confirmation dialog -->
-4. Wait for the stack to disappear from the list. This takes several minutes.
+4. Wait for the stack to disappear from the list. Expect 15 to 30 minutes, and sometimes longer. AWS shuts down the database and the site's web address (CloudFront) at its own pace, and the delete waits for both.
 
 This removes everything the install created, including the database. Your site stops working.
 
@@ -263,4 +265,4 @@ An update went wrong and the undo also failed. The stack is locked.
 
 ### A failed first install
 
-If your first install ends in **ROLLBACK_COMPLETE**, the site is not running and the main charges have stopped. A small AWS helper stack named `CDKToolkit` may stay behind at near-zero cost; leave it in place. It costs almost nothing, and the next install reuses it. Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
+If your first install ends in **ROLLBACK_COMPLETE**, the site is not running and the charges have stopped. The undo removes what the install had built so far. That includes the AWS helper stack named `CDKToolkit`, if this install created it. A `CDKToolkit` that was in your account before the install stays. Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
