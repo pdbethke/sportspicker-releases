@@ -11,7 +11,7 @@ The whole install takes about 30 minutes of your time. Most of that is waiting.
 SportsPicker runs in your own Amazon Web Services (AWS) account. AWS bills you directly.
 
 - Expect about $16.50 to $17.50 a month.
-- Most of that, about $14 to $15, is the database. Three stored secrets cost 3 x $0.40. Each of the remaining items is under $1.
+- Most of that, about $14 to $15, is the database. Three stored secrets cost 3 x $0.40. Each of the remaining items is under $1. The sign-in service for email sign-in adds no charge at club size.
 - The install sets a $20 monthly budget. AWS emails you when you reach 80% and 100% of it.
 - Deleting the install stops the charges. Section 11 shows how.
 
@@ -124,7 +124,7 @@ To log in as administrator, add `admin/` to the end of the address. For example,
 
 ## 7. Add your members
 
-Members do not sign themselves up. You add each one from the admin pages, in one of two ways: invite their email address (the usual way), or create an account for them with a temporary password. Your install includes a sign-in service (Amazon Cognito) that handles the email route.
+Members do not sign themselves up. You add each one from the admin pages, in one of two ways: invite their email address (the usual way), or create an account for them with a temporary password. A current install includes a sign-in service (Amazon Cognito) that handles the email route. An older install gains it with the update described in section 8.
 
 ### Invite by email
 
@@ -137,7 +137,7 @@ SportsPicker sends no email itself. You send the member your SiteUrl, by whateve
 
 The member then:
 
-1. Opens the SiteUrl and clicks **Sign in with your email**, the button beside the username and password form.
+1. Opens the SiteUrl and clicks **Sign in with your email**, the button under the username and password form.
 2. The first time, registers with the sign-in service using the address you invited, and confirms it from a verification email the service sends. Those pages belong to the sign-in service, not to SportsPicker, so they look the way the service makes them.
 3. Returns to the site signed in, as a member of your club in the role you chose. The invitation leaves the pending list and the member appears in the members list.
 
