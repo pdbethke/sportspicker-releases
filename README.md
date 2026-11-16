@@ -2,7 +2,7 @@
 
 This guide takes you from nothing to a working SportsPicker site for your club. You need a laptop and a credit card. You do not need to be a developer.
 
-When you finish, you will have one web address (a URL) that you can send to your members. An invented league is already running on it, so members can sign up and make picks right away.
+When you finish, you will have one web address (a URL) that you can send to your members. An invented league is already running on it, so members can make picks right away once you have added them (section 7).
 
 The whole install takes about 30 minutes of your time. Most of that is waiting.
 
@@ -13,7 +13,7 @@ SportsPicker runs in your own Amazon Web Services (AWS) account. AWS bills you d
 - Expect about $16.50 to $17.50 a month.
 - Most of that, about $14 to $15, is the database. Three stored secrets cost 3 x $0.40. Each of the remaining items is under $1.
 - The install sets a $20 monthly budget. AWS emails you when you reach 80% and 100% of it.
-- Deleting the install stops the charges. Section 10 shows how.
+- Deleting the install stops the charges. Section 11 shows how.
 
 The demo season (the invented league) runs for about 2 weeks from the day you install.
 
@@ -106,7 +106,7 @@ You may see a second stack appear, named `CDKToolkit`. That is an AWS helper sta
 
 When the status changes to **CREATE_COMPLETE**, the install is done.
 
-If the status turns red and says anything with FAILED or ROLLBACK, go to section 12.
+If the status turns red and says anything with FAILED or ROLLBACK, go to section 13.
 
 ## 6. Find your site address
 
@@ -122,7 +122,29 @@ To log in as administrator, add `admin/` to the end of the address. For example,
 
 <!-- screenshot: the admin login page -->
 
-## 7. Update to a new version
+## 7. Add your members
+
+Members do not sign themselves up. You create each member's account from the admin pages, and give them a temporary password to get in with.
+
+1. Log in at your SiteUrl plus `admin/` and click **Members**.
+2. Under **Add Member**, type the username the member will sign in with (for example `jane` or `jane.smith`), choose **Member**, and click **Add**.
+3. A green box shows **Created an account for jane** and a **temporary password**. Copy it and give it to Jane now, by whatever means you would use for a password. It is shown only this once; if you lose it, add the member again under a different username.
+<!-- screenshot: the Members page after adding a member, with the temporary password box -->
+4. Click **Done, I have passed it on**.
+
+Jane then goes to the SiteUrl, signs in with her username and the temporary password, and is asked to choose her own password before she sees anything else. The temporary one stops working as soon as she has.
+
+If you type a username that already has an account (someone who was a member before, say), they are added to the club as they are, with the password they already have.
+
+Choosing **Admin** instead of **Member** makes the new account a second administrator, who can do everything you can. It is worth having one: the site will not let the last administrator step down, but it cannot help you if the only administrator forgets their password.
+
+### Changing a password
+
+Anyone who is signed in, members and administrators alike, can change their own password: click **Change password** at the bottom of the menu, type the current password and the new one twice. Every other place they were signed in is signed out when they do.
+
+There is no "forgot my password" link in this version. A member who has forgotten theirs needs an administrator to add them again under a new username; an administrator who has forgotten theirs needs another administrator. Keep both in a password manager.
+
+## 8. Update to a new version
 
 When we publish a new version, the admin dashboard shows a notice: "Update available", with the new version number in a small badge beside it (for example `v1.2.0`), a **Release notes** link and an **Update** button.
 
@@ -142,9 +164,9 @@ Do not load an older version's template to go back. An older version is not buil
 
 Some versions can only be reached from a recent one. If the update fails with a message that it needs an earlier version first (for example "needs v1.2.0 or later"), nothing was changed: update to that version first, then to the new one.
 
-Note on the password: do not type a new AdminPassword on the update page. A new password typed there is stored in the install's secret but never used, and the next update overwrites it. Your admin password stays the one you chose at install. This version has no way to change it after install. Choose it carefully and keep it in a password manager.
+Note on the password: do not type a new AdminPassword on the update page. A new password typed there is stored in the install's secret but never used, and the next update overwrites it. To change your admin password, sign in and use **Change password** (section 7).
 
-## 8. Remove the demo league
+## 9. Remove the demo league
 
 The invented league is there so your members have something to play with. When your real season is ready, remove it.
 
@@ -178,9 +200,9 @@ Then:
    ```
 9. Click **Test** again. This time the demo data is deleted. It cannot be undone. Check for `"exit_code": 0` and read `stdout` again.
 
-## 9. Take a snapshot before you delete (optional)
+## 10. Take a snapshot before you delete (optional)
 
-When you delete the install in section 10, the database is deleted for good. This includes your members, picks and scores. If you might want that data later, save a snapshot first.
+When you delete the install in section 11, the database is deleted for good. This includes your members, picks and scores. If you might want that data later, save a snapshot first.
 
 1. In the console search bar, type **RDS** and open it.
 2. Click **Databases** in the left menu.
@@ -192,7 +214,7 @@ When you delete the install in section 10, the database is deleted for good. Thi
 
 A snapshot you keep costs a small amount each month. Delete it from the same Snapshots page when you no longer need it.
 
-## 10. Delete SportsPicker
+## 11. Delete SportsPicker
 
 This stops the monthly charges.
 
@@ -206,7 +228,7 @@ This removes everything the install created, including the database. Your site s
 
 About `CDKToolkit`, the AWS helper stack from section 5: it is removed only if your install created it. If a second club installed SportsPicker later in the same AWS account, that club uses the same helper. Deleting the first install then removes the helper the second one needs. If you share an AWS account with another install, do not delete the first one unless you have checked with the others first.
 
-## 11. Later
+## 12. Later
 
 These are optional and are for when your club is ready.
 
@@ -214,7 +236,7 @@ These are optional and are for when your club is ready.
 
 1. Buy a key from SportsRadar.
 2. In the console, open **Secrets Manager** and click **Store a new secret**. Choose **Other type of secret**, then open the **Plaintext** tab and paste only the key, with nothing else. Do not use the key/value tab, which stores the key in a form the site cannot read. Pick any name you like, for example `my-sportsradar-key`.
-3. Open your stack in CloudFormation and choose **Update stack**, **Replace existing template** as in section 7.
+3. Open your stack in CloudFormation and choose **Update stack**, **Replace existing template** as in section 8.
 4. Set `SportsDataKeySecret` to the secret's name (`my-sportsradar-key` in the example). Keep every other value.
 5. Leave **IAM role - optional** empty, tick the IAM box and submit.
 
@@ -222,7 +244,7 @@ A stored secret costs about $0.40 a month.
 
 **A custom domain** (such as `picks.yourclub.org`). This version does not support one. Your site lives at the SiteUrl address. We will say so here when that changes.
 
-## 12. If it fails
+## 13. If it fails
 
 Open the CloudFormation console and click your stack. Click the **Events** tab. The failed line is red. The **Status reason** column says what went wrong.
 
