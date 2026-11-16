@@ -120,6 +120,8 @@ Bookmark it. This is the address you send to your members.
 
 To log in as administrator, add `admin/` to the end of the address. For example, if the SiteUrl is `https://example.cloudfront.net/`, the admin page is `https://example.cloudfront.net/admin/`. Use the AdminUsername and AdminPassword you chose in section 4.
 
+An administrator who was invited by email logs in the same way: open the site address plus `admin/`, then click **Sign in with your email**.
+
 <!-- screenshot: the admin login page -->
 
 ## 7. Add your members
@@ -138,14 +140,14 @@ SportsPicker sends no email itself. You send the member your SiteUrl, by whateve
 The member then:
 
 1. Opens the SiteUrl and clicks **Sign in with your email**, the button under the username and password form.
-2. The first time, registers with the sign-in service using the address you invited, and confirms it from a verification email the service sends. Those pages belong to the sign-in service, not to SportsPicker, so they look the way the service makes them.
+2. The first time, registers with the sign-in service using the address you invited, and confirms it from a verification email the service sends. The service asks for a first and last name. Those are the name the club sees on the leaderboards, so ask members to enter the names they want shown. Those pages belong to the sign-in service, not to SportsPicker, so they look the way the service makes them.
 3. Returns to the site signed in, as a member of your club in the role you chose. The invitation leaves the pending list and the member appears in the members list.
 
 Later visits use the same button and the password the member chose with the service. Capital letters in the address do not matter.
 
 An address you have not invited can still register with the service, but when it comes back to the site it is told it has not been invited and gets no account. Invite it and ask the person to try again.
 
-The sign-in service limits how many verification emails it sends in a day. If you invite a large club, spread the invitations over several days.
+The sign-in service sends its verification emails from a default sender that allows about 50 emails a day. Plan around that limit: if you invite a whole club in one evening, spread the invitations over several days.
 
 ### Add a member with a temporary password
 
@@ -164,7 +166,7 @@ Choosing **Admin** instead of **Member** makes the new account a second administ
 
 ### Changing a password
 
-A member with a username and password can change their own password: click **Change password** at the bottom of the menu, type the current password and the new one twice. Every other place they were signed in is signed out when they do. A member who signs in with their email has no password in SportsPicker, so the menu does not offer this.
+A member with a username and password can change their own password: click **Change password** at the bottom of the menu, type the current password and the new one twice. Every other place they were signed in is signed out when they do. A member or administrator who signs in with their email has no password in SportsPicker, so neither the member site nor the admin site offers this, and the page does nothing for them.
 
 ### Forgot password
 
@@ -243,7 +245,7 @@ When you delete the install in section 11, the database is deleted for good. Thi
 <!-- screenshot: the RDS Actions menu with Take snapshot highlighted -->
 6. Click **Snapshots** in the left menu and wait until the status is **Available**.
 
-A snapshot keeps the database only. It does not keep the sign-in service, so members who sign in with their email would need inviting again on a new install.
+A snapshot keeps the database only. It does not keep the sign-in service, and email sign-ins do not survive deleting the stack. If you restore the data from a snapshot into a new install, members who signed in with their email cannot sign in again: a new invitation for their address is refused because they are already members, and their sign-in is refused too. Add each of them back with a temporary password under a new username (section 7).
 
 A snapshot you keep costs a small amount each month. Delete it from the same Snapshots page when you no longer need it.
 
@@ -257,7 +259,7 @@ This stops the monthly charges.
 <!-- screenshot: the stack page with Delete button and confirmation dialog -->
 4. Wait for the stack to disappear from the list. Expect 15 to 30 minutes, and sometimes longer. AWS shuts down the database and the site's web address (CloudFront) at its own pace, and the delete waits for both.
 
-This removes everything the install created, including the database and the sign-in service. Your site stops working, and every member who signs in with their email loses that sign-in for good: a new install starts with an empty sign-in service, so each member would need inviting again.
+This removes everything the install created, including the database and the sign-in service. Your site stops working, and every member who signs in with their email loses that sign-in for good: a new install starts with an empty sign-in service, so each member would need inviting again. If you restore a snapshot into the new install, see the end of section 10 instead.
 
 About `CDKToolkit`, the AWS helper stack from section 5: it is removed only if your install created it. If a second club installed SportsPicker later in the same AWS account, that club uses the same helper. Deleting the first install then removes the helper the second one needs. If you share an AWS account with another install, do not delete the first one unless you have checked with the others first.
 
