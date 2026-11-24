@@ -226,7 +226,19 @@ This stops the monthly charges.
 
 This removes everything the install created, including the database. Your site stops working.
 
-About `CDKToolkit`, the AWS helper stack from section 5: it is removed only if your install created it. If a second club installed SportsPicker later in the same AWS account, that club uses the same helper. Deleting the first install then removes the helper the second one needs. If you share an AWS account with another install, do not delete the first one unless you have checked with the others first.
+About `CDKToolkit`, the AWS helper stack from section 5: from v0.1.4 on, deleting SportsPicker leaves it in place, along with its storage bucket. The helper belongs to your AWS account, not to your club. Another SportsPicker install in the same account uses it, and so does any other tool there built with the AWS CDK. Removing it would leave them unable to update or delete their own stacks.
+
+Which version decides this is the one your `SportsPicker-deployer` stack was last installed or updated with. With v0.1.3 or earlier, deleting removes `CDKToolkit` and its bucket if your install was the one that created them. If you share the AWS account with another install, update to v0.1.4 or later (section 8) before you delete.
+
+If nothing else in your AWS account uses the helper, you can remove it yourself after the delete has finished:
+
+1. Open the CloudFormation console and check your region.
+2. Click the `CDKToolkit` stack, then **Delete**, and confirm. Wait for it to disappear from the list.
+3. Deleting the stack keeps its bucket. In the console search bar, type **S3** and open it.
+4. Find the bucket whose name starts with `cdk-hnb659fds-assets-` and ends with your region, for example `cdk-hnb659fds-assets-123456789012-us-east-2`.
+5. Select it and click **Empty**, and follow the prompts. Then select it again, click **Delete**, and follow the prompts.
+
+If you leave them, the bucket's storage is the only charge, usually a few cents a month or less.
 
 ## 12. Later
 
@@ -287,4 +299,4 @@ An update went wrong and the undo also failed. The stack is locked.
 
 ### A failed first install
 
-If your first install ends in **ROLLBACK_COMPLETE**, the site is not running and the charges have stopped. The undo removes what the install had built so far. That includes the AWS helper stack named `CDKToolkit`, if this install created it. A `CDKToolkit` that was in your account before the install stays. Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
+If your first install ends in **ROLLBACK_COMPLETE**, the site is not running and the charges have stopped. The undo removes what the install had built so far, except the AWS helper stack named `CDKToolkit`: from v0.1.4 on it stays, for the reasons in section 11. With v0.1.3 or earlier it is removed if this install created it, and a `CDKToolkit` that was in your account before the install stays. Delete the failed stack (select it, then **Delete**), fix the cause above, then click the Launch button again.
