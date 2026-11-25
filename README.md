@@ -11,7 +11,7 @@ The whole install takes about 30 minutes of your time. Most of that is waiting.
 SportsPicker runs in your own Amazon Web Services (AWS) account. AWS bills you directly.
 
 - Expect about $16.50 to $17.50 a month.
-- Most of that, about $14 to $15, is the database. Three stored secrets cost 3 x $0.40. Each of the remaining items is under $1.
+- Most of that, about $14 to $15, is the database. Three stored secrets cost 3 x $0.40. Each of the remaining items is under $1. The sign-in service for email sign-in adds no charge at club size.
 - The install sets a $20 monthly budget. AWS emails you when you reach 80% and 100% of it.
 - Deleting the install stops the charges. Section 11 shows how.
 
@@ -120,19 +120,45 @@ Bookmark it. This is the address you send to your members.
 
 To log in as administrator, add `admin/` to the end of the address. For example, if the SiteUrl is `https://example.cloudfront.net/`, the admin page is `https://example.cloudfront.net/admin/`. Use the AdminUsername and AdminPassword you chose in section 4.
 
+An administrator who was invited by email logs in the same way: open the site address plus `admin/`, then click **Sign in with your email**.
+
 <!-- screenshot: the admin login page -->
 
 ## 7. Add your members
 
-Members do not sign themselves up. You create each member's account from the admin pages, and give them a temporary password to get in with.
+Members do not sign themselves up. You add each one from the admin pages, in one of two ways: invite their email address (the usual way), or create an account for them with a temporary password. A current install includes a sign-in service (Amazon Cognito) that handles the email route. An older install gains it with the update described in section 8.
+
+### Invite by email
 
 1. Log in at your SiteUrl plus `admin/` and click **Members**.
-2. Under **Add Member**, type the username the member will sign in with (for example `jane` or `jane.smith`), choose **Member**, and click **Add**.
-3. A green box shows **Created an account for jane** and a **temporary password**. Copy it and give it to Jane now, by whatever means you would use for a password. It is shown only this once; if you lose it, add the member again under a different username.
-<!-- screenshot: the Members page after adding a member, with the temporary password box -->
-4. Click **Done, I have passed it on**.
+2. Under **Invite by email**, type the member's email address and choose **Member** or **Admin**. No role is chosen for you. Click **Invite**.
+3. A green message tells you to pass on the site address and ask them to choose **Sign in with your email** with this address. The invitation appears under **Pending invitations**. If you invited the wrong address, click **Revoke** beside it and confirm.
+<!-- screenshot: the Members page after inviting, with the Pending invitations table -->
 
-Jane then goes to the SiteUrl, signs in with her username and the temporary password, and is asked to choose her own password before she sees anything else. The temporary one stops working as soon as she has.
+SportsPicker sends no email itself. You send the member your SiteUrl, by whatever means you normally would.
+
+The member then:
+
+1. Opens the SiteUrl and clicks **Sign in with your email**, the button under the username and password form.
+2. The first time, registers with the sign-in service using the address you invited, and confirms it from a verification email the service sends. The service asks for a first and last name. Those are the name the club sees on the leaderboards, so ask members to enter the names they want shown. Those pages belong to the sign-in service, not to SportsPicker, so they look the way the service makes them.
+3. Returns to the site signed in, as a member of your club in the role you chose. The invitation leaves the pending list and the member appears in the members list.
+
+Later visits use the same button and the password the member chose with the service. Capital letters in the address do not matter.
+
+An address you have not invited can still register with the service, but when it comes back to the site it is told it has not been invited and gets no account. Invite it and ask the person to try again.
+
+The sign-in service sends its verification emails from a default sender that allows about 50 emails a day. Plan around that limit: if you invite a whole club in one evening, spread the invitations over several days.
+
+### Add a member with a temporary password
+
+Use this for someone who cannot receive email at an address you can invite.
+
+1. Under **Add Member**, type the username the member will sign in with (for example `jane` or `jane.smith`), choose **Member**, and click **Add**.
+2. A green box shows **Created an account for jane** and a **temporary password**. Copy it and give it to Jane now, by whatever means you would use for a password. It is shown only this once; if you lose it, add the member again under a different username.
+<!-- screenshot: the Members page after adding a member, with the temporary password box -->
+3. Click **Done, I have passed it on**.
+
+Jane then goes to the SiteUrl, signs in with her username and the temporary password in the form on the sign-in page, and is asked to choose her own password before she sees anything else. The temporary one stops working as soon as she has.
 
 If you type a username that already has an account (someone who was a member before, say), they are added to the club as they are, with the password they already have.
 
@@ -140,9 +166,14 @@ Choosing **Admin** instead of **Member** makes the new account a second administ
 
 ### Changing a password
 
-Anyone who is signed in, members and administrators alike, can change their own password: click **Change password** at the bottom of the menu, type the current password and the new one twice. Every other place they were signed in is signed out when they do.
+A member with a username and password can change their own password: click **Change password** at the bottom of the menu, type the current password and the new one twice. Every other place they were signed in is signed out when they do. A member or administrator who signs in with their email has no password in SportsPicker, so neither the member site nor the admin site offers this, and the page does nothing for them.
 
-There is no "forgot my password" link in this version. A member who has forgotten theirs needs an administrator to add them again under a new username; an administrator who has forgotten theirs needs another administrator. Keep both in a password manager.
+### Forgot password
+
+What to do depends on how the person signs in.
+
+- **Signs in with their email.** The sign-in service's own page has the link to reset the password. The member clicks **Sign in with your email**, then uses the reset link on the page that opens. The reset is the service's, not SportsPicker's.
+- **Signs in with a username and password.** There is no reset link. An administrator adds the person again under a new username. An administrator who has forgotten their own password needs another administrator to do the same, so keep two administrators and use a password manager.
 
 ## 8. Update to a new version
 
@@ -159,6 +190,8 @@ When we publish a new version, the admin dashboard shows a notice: "Update avail
 <!-- screenshot: the Update stack parameters page with existing values kept -->
 
 Wait for the status to read **UPDATE_COMPLETE**. If an update fails, your old version keeps serving until it is fixed. The stack undoes the update by itself and ends in **UPDATE_ROLLBACK_COMPLETE**. When the cause is fixed, run the update again.
+
+If your install was made before email sign-in existed, the first update that includes it adds the sign-in service. You are not asked anything new.
 
 Do not load an older version's template to go back. An older version is not built to run on a database that a newer one has changed. Versions that know this change nothing on your site when asked to go back, even though the update finishes and says **UPDATE_COMPLETE**. If that happens, update again with the newer version's template.
 
@@ -212,6 +245,8 @@ When you delete the install in section 11, the database is deleted for good. Thi
 <!-- screenshot: the RDS Actions menu with Take snapshot highlighted -->
 6. Click **Snapshots** in the left menu and wait until the status is **Available**.
 
+A snapshot keeps the database only. It does not keep the sign-in service, and email sign-ins do not survive deleting the stack. If you restore the data from a snapshot into a new install, members who signed in with their email cannot sign in again: a new invitation for their address is refused because they are already members, and their sign-in is refused too. Add each of them back with a temporary password under a new username (section 7).
+
 A snapshot you keep costs a small amount each month. Delete it from the same Snapshots page when you no longer need it.
 
 ## 11. Delete SportsPicker
@@ -224,7 +259,7 @@ This stops the monthly charges.
 <!-- screenshot: the stack page with Delete button and confirmation dialog -->
 4. Wait for the stack to disappear from the list. Expect 15 to 30 minutes, and sometimes longer. AWS shuts down the database and the site's web address (CloudFront) at its own pace, and the delete waits for both.
 
-This removes everything the install created, including the database. Your site stops working.
+This removes everything the install created, including the database and the sign-in service. Your site stops working, and every member who signs in with their email loses that sign-in for good: a new install starts with an empty sign-in service, so each member would need inviting again. If you restore a snapshot into the new install, see the end of section 10 instead.
 
 About `CDKToolkit`, the AWS helper stack from section 5: from v0.1.4 on, deleting SportsPicker leaves it in place, along with its storage bucket. The helper belongs to your AWS account, not to your club. Another SportsPicker install in the same account uses it, and so does any other tool there built with the AWS CDK. Removing it would leave them unable to update or delete their own stacks.
 
